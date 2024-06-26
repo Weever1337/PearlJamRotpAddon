@@ -1,13 +1,13 @@
-package com.weever.rotp_pj.action.stand;
+package it.hurts.rotp_pj.action.stand;
 
 import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
-import com.github.standobyte.jojo.init.ModParticles;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_pj.GameplayUtil;
+import it.hurts.rotp_pj.GameplayUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,41 +16,31 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-public class InjectPoisonFood extends StandEntityAction {
-    public InjectPoisonFood(Builder builder) {
+public class UnjectFood extends StandAction {
+    public UnjectFood(Builder builder) {
         super(builder);
     }
 
     @Override
-    protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        LivingEntity user = power.getUser();
+    public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         ItemStack itemStack = GameplayUtil.GetFoodItem(user);
-        if (itemStack == ItemStack.EMPTY) {
-            return ActionConditionResult.NEGATIVE;
-        }
-        if (itemStack.hasTag()) {
+        if (itemStack != ItemStack.EMPTY && itemStack.hasTag()) {
             CompoundNBT tags = itemStack.getTag();
             if (tags.getBoolean("injected")) {
-                return ActionConditionResult.NEGATIVE;
+                return ActionConditionResult.POSITIVE;
             } else if (tags.getBoolean("poisoned")) {
-                return ActionConditionResult.NEGATIVE;
+                return ActionConditionResult.POSITIVE;
             }
         }
-        return ActionConditionResult.POSITIVE;
+        return ActionConditionResult.NEGATIVE;
     }
 
     @Override
-    public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
+    protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide()) {
-            LivingEntity user = userPower.getUser();
             ItemStack itemStack = GameplayUtil.GetFoodItem(user);
-            double x = user.getX();
-            double y = user.getY();
-            double z = user.getZ();
             if (itemStack != ItemStack.EMPTY) {
-                ItemStack stack = itemStack.copy();
-                world.addParticle(ModParticles.HAMON_SPARK_YELLOW.get(), x, y, z, .1, 5, 30);
-                stack.getOrCreateTag().putBoolean("poisoned", true);
+                ItemStack stack = itemStack.getItem().getDefaultInstance().copy();
                 user.setItemInHand(Hand.OFF_HAND, stack);
             }
         }

@@ -1,11 +1,10 @@
-package com.weever.rotp_pj;
+package it.hurts.rotp_pj;
 
-import com.weever.rotp_pj.init.InitEntities;
-import com.weever.rotp_pj.init.InitStands;
+import it.hurts.rotp_pj.init.InitEntities;
+import it.hurts.rotp_pj.init.InitStands;
+import it.hurts.rotp_pj.init.InitSounds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.weever.rotp_pj.init.InitSounds;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;

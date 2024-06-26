@@ -1,6 +1,6 @@
-package com.weever.rotp_pj.init;
+package it.hurts.rotp_pj.init;
 
-import com.weever.rotp_pj.RotpPJAddon;
+import it.hurts.rotp_pj.RotpPJAddon;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;

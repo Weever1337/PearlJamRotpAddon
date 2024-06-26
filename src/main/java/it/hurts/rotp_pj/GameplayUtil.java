@@ -1,33 +1,29 @@
-package com.weever.rotp_pj;
+package it.hurts.rotp_pj;
 
 import com.github.standobyte.jojo.init.ModParticles;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_pj.entity.PJEntity;
-import com.weever.rotp_pj.init.InitStands;
+import it.hurts.rotp_pj.init.InitStands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
-import java.util.UUID;
+
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +43,22 @@ public class GameplayUtil {
 //            entity.setItemInHand(Hand.MAIN_HAND, itemStack);
 //        }
 //    } // TODO: Fix this shit.
+
+    @SubscribeEvent
+    public static void onLivingEntityUpdate(LivingEvent.LivingUpdateEvent event ) {
+        Entity entity = event.getEntity();
+        if (entity instanceof ItemEntity) {
+            ItemStack item = ((ItemEntity) entity).getItem();
+            CompoundNBT tags = item.getTag();
+            if (item.hasTag()) {
+                if (tags.getBoolean("injected")) {
+                    entity.level.addParticle(ModParticles.HAMON_SPARK_YELLOW.get(), entity.position().x, entity.position().y + 0.5, entity.position().z, 0, 0, 0);
+                } else if (tags.getBoolean("poisoned")) {
+                    entity.level.addParticle(ModParticles.HAMON_SPARK_BLUE.get(), entity.position().x, entity.position().y + 0.5, entity.position().z, 0, 0, 0);
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onEatingEvent(LivingEntityUseItemEvent.Tick event) {
@@ -79,27 +91,6 @@ public class GameplayUtil {
                 AddDeBuffs(entity, randomBoolean);
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void ItemTooltipEvent(ItemTooltipEvent event) {
-        ItemStack item = event.getItemStack();
-        LivingEntity entity = event.getEntityLiving();
-        IStandPower.getStandPowerOptional(entity).ifPresent(power -> {
-            if(power.getType() == InitStands.STAND_PJ.getStandType()) {
-                if (item.isEdible() && item.hasTag()) {
-                    CompoundNBT tags = item.getTag();
-                    if (tags.getBoolean("injected")) {
-                        event.getToolTip().add(new StringTextComponent("Pearl Jam's Injected Food").withStyle(TextFormatting.GOLD).withStyle(TextFormatting.ITALIC));
-                    } else if (tags.getBoolean("poisoned")) {
-                        event.getToolTip().add(new StringTextComponent("Pearl Jam's Poisoned Food").withStyle(TextFormatting.DARK_PURPLE).withStyle(TextFormatting.ITALIC));
-                    } else {
-                        event.getToolTip().removeIf(text -> text.getString().contains("Pearl Jam's Injected Food"));
-                        event.getToolTip().removeIf(text -> text.getString().contains("Pearl Jam's Poisoned Food"));
-                    }
-                }
-            }
-        });
     }
 
     private static void AddBuffs(LivingEntity entity, boolean power) {

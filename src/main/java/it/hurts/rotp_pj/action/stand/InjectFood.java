@@ -1,53 +1,54 @@
-package com.weever.rotp_pj.action.stand;
+package it.hurts.rotp_pj.action.stand;
 
 import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
+import com.github.standobyte.jojo.init.ModParticles;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.weever.rotp_pj.GameplayUtil;
-import com.weever.rotp_pj.entity.PJEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+
+import it.hurts.rotp_pj.GameplayUtil;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public class UnjectFood extends StandEntityAction {
-    public UnjectFood(Builder builder) {
+public class InjectFood extends StandAction {
+    public InjectFood(Builder builder) {
         super(builder);
     }
 
     @Override
-    protected ActionConditionResult checkStandConditions(StandEntity stand, IStandPower power, ActionTarget target) {
-        LivingEntity user = power.getUser();
+    public ActionConditionResult checkConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         ItemStack itemStack = GameplayUtil.GetFoodItem(user);
-        if (itemStack != ItemStack.EMPTY && itemStack.hasTag()) {
+        if (itemStack == ItemStack.EMPTY) {
+            return ActionConditionResult.NEGATIVE;
+        }
+        if (itemStack.hasTag()) {
             CompoundNBT tags = itemStack.getTag();
             if (tags.getBoolean("injected")) {
-                return ActionConditionResult.POSITIVE;
+                return ActionConditionResult.NEGATIVE;
             } else if (tags.getBoolean("poisoned")) {
-                return ActionConditionResult.POSITIVE;
+                return ActionConditionResult.NEGATIVE;
             }
         }
-        return ActionConditionResult.NEGATIVE;
+        return ActionConditionResult.POSITIVE;
     }
 
     @Override
-    public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
+    protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide()) {
-            LivingEntity user = userPower.getUser();
             ItemStack itemStack = GameplayUtil.GetFoodItem(user);
+            double x = user.getX();
+            double y = user.getY();
+            double z = user.getZ();
             if (itemStack != ItemStack.EMPTY) {
-                ItemStack stack = itemStack.getItem().getDefaultInstance().copy();
+                ItemStack stack = itemStack.copy();
+                stack.getOrCreateTag().putBoolean("injected", true);
                 user.setItemInHand(Hand.OFF_HAND, stack);
             }
         }

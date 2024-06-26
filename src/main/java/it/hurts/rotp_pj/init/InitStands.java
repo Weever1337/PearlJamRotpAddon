@@ -1,8 +1,8 @@
-package com.weever.rotp_pj.init;
+package it.hurts.rotp_pj.init;
 
 import com.github.standobyte.jojo.action.Action;
+import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
-import com.github.standobyte.jojo.action.stand.StandEntityBlock;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.power.stand.EntityStandRegistryObject;
 import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
@@ -10,10 +10,12 @@ import com.github.standobyte.jojo.power.impl.stand.StandInstance;
 import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
-import com.weever.rotp_pj.RotpPJAddon;
-import com.weever.rotp_pj.action.stand.*;
-import com.weever.rotp_pj.entity.PJEntity;
+import it.hurts.rotp_pj.RotpPJAddon;
+import it.hurts.rotp_pj.entity.PJEntity;
 
+import it.hurts.rotp_pj.action.stand.InjectFood;
+import it.hurts.rotp_pj.action.stand.InjectPoisonFood;
+import it.hurts.rotp_pj.action.stand.UnjectFood;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -26,8 +28,8 @@ public class InitStands {
             (Class<StandType<?>>) ((Class<?>) StandType.class), RotpPJAddon.MOD_ID);
     
  // ======================================== Pearl Jam ========================================
-    public static final RegistryObject<StandEntityAction> INJECT_FOOD = ACTIONS.register("pj_inject",
-         () -> new InjectFood(new StandEntityAction.Builder()
+    public static final RegistryObject<StandAction> INJECT_FOOD = ACTIONS.register("pj_inject",
+         () -> new InjectFood(new StandAction.Builder()
                  .partsRequired(StandInstance.StandPart.ARMS)
                  .cooldown(3)
                  .staminaCost(300)
@@ -35,8 +37,8 @@ public class InitStands {
                  .shout(InitSounds.PJ_INJECT)
          ));
 
-    public static final RegistryObject<StandEntityAction> INJECT_POISON_FOOD = ACTIONS.register("pj_poison_inject",
-            () -> new InjectPoisonFood(new StandEntityAction.Builder()
+    public static final RegistryObject<StandAction> INJECT_POISON_FOOD = ACTIONS.register("pj_poison_inject",
+            () -> new InjectPoisonFood(new StandAction.Builder()
                     .partsRequired(StandInstance.StandPart.ARMS)
                     .cooldown(6)
                     .staminaCost(500)
@@ -45,8 +47,8 @@ public class InitStands {
                     .shiftVariationOf(INJECT_FOOD)
             ));
 
-    public static final RegistryObject<StandEntityAction> UNJECT_FOOD = ACTIONS.register("pj_unject",
-            () -> new UnjectFood(new StandEntityAction.Builder()
+    public static final RegistryObject<StandAction> UNJECT_FOOD = ACTIONS.register("pj_unject",
+            () -> new UnjectFood(new StandAction.Builder()
                     .partsRequired(StandInstance.StandPart.ARMS)
                     .cooldown(3)
                     .staminaCost(300)
