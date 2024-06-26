@@ -1,0 +1,14 @@
+{
+  "entity.rotp_pj.pearl_jam": "Pearl Jam",
+  "stand.rotp_pj.pearl_jam": "Pearl Jam",
+
+  "action.rotp_pj.pj_inject": "Inject Food",
+  "action.rotp_pj.pj_inject.param": "Inject %s",
+  "action.rotp_pj.pj_unject": "Unject Food",
+  "action.rotp_pj.pj_unject.param": "Unject %s",
+
+  "action.rotp_pj.pj_poison_inject": "Inject Poison into Food",
+  "action.rotp_pj.pj_poison_inject.param": "Inject Poison into %s",
+  "action.rotp_pj.pj_poison_unject": "Unject Poison from Food",
+  "action.rotp_pj.pj_poison_unject.param": "Unject Poison from %s"
+}

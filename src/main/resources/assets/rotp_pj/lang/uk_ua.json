@@ -1,0 +1,14 @@
+{
+  "entity.rotp_pj.pearl_jam": "Pearl Jam",
+  "stand.rotp_pj.pearl_jam": "Pearl Jam",
+
+  "action.rotp_pj.pj_inject": "Ввести в їжу",
+  "action.rotp_pj.pj_inject.param": "Ввести в %s",
+  "action.rotp_pj.pj_unject": "Вивезти з їжи",
+  "action.rotp_pj.pj_unject.param": "Вивезти з %s",
+
+  "action.rotp_pj.pj_poison_inject": "Ввести яд в їжу",
+  "action.rotp_pj.pj_poison_inject.param": "Ввести яд в %s",
+  "action.rotp_pj.pj_poison_unject": "Вивезти яд з їжи",
+  "action.rotp_pj.pj_poison_unject.param": "Вивезти яд з %s"
+}
