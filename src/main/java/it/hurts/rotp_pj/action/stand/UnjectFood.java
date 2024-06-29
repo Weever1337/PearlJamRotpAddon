@@ -9,6 +9,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import it.hurts.rotp_pj.GameplayUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
@@ -40,8 +41,16 @@ public class UnjectFood extends StandAction {
         if (!world.isClientSide()) {
             ItemStack itemStack = GameplayUtil.GetFoodItem(user);
             if (itemStack != ItemStack.EMPTY) {
+                int count = itemStack.getCount();
+                int stamina = 100;
+                for (int i = 0; i < count; i++) {
+                    stamina += 10;
+                }
+                boolean hand = GameplayUtil.getHandOfUser().containsKey((PlayerEntity) user);
                 ItemStack stack = itemStack.getItem().getDefaultInstance().copy();
-                user.setItemInHand(Hand.OFF_HAND, stack);
+                stack.setCount(count);
+                user.setItemInHand(hand ? Hand.MAIN_HAND : Hand.OFF_HAND, stack);
+                power.consumeStamina(stamina);
             }
         }
     }

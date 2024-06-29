@@ -10,6 +10,7 @@ import com.github.standobyte.jojo.init.ModParticles;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 
 import it.hurts.rotp_pj.GameplayUtil;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.entity.LivingEntity;
@@ -43,13 +44,17 @@ public class InjectFood extends StandAction {
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide()) {
             ItemStack itemStack = GameplayUtil.GetFoodItem(user);
-            double x = user.getX();
-            double y = user.getY();
-            double z = user.getZ();
             if (itemStack != ItemStack.EMPTY) {
+                int count = itemStack.getCount();
+                int stamina = 100;
+                for (int i = 0; i < count; i++) {
+                    stamina += 10;
+                }
+                boolean hand = GameplayUtil.getHandOfUser().containsKey((PlayerEntity) user);
                 ItemStack stack = itemStack.copy();
                 stack.getOrCreateTag().putBoolean("injected", true);
-                user.setItemInHand(Hand.OFF_HAND, stack);
+                user.setItemInHand(hand ? Hand.MAIN_HAND : Hand.OFF_HAND, stack);
+                power.consumeStamina(stamina);
             }
         }
     }

@@ -11,7 +11,6 @@ logoFile="logo.png"
 credits="StandoByte"
 description='''
 An Addon that adds Pearl Jam to Ripples of the Past.
-Also if you want to help me with the development, you can buy Patreon! - https://patreon.com/Weever
 '''
 [[dependencies.${mod_id}]]
     modId="forge"

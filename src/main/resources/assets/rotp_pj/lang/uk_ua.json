@@ -10,5 +10,8 @@
   "action.rotp_pj.pj_poison_inject": "Ввести яд в їжу",
   "action.rotp_pj.pj_poison_inject.param": "Ввести яд в %s",
   "action.rotp_pj.pj_poison_unject": "Вивезти яд з їжи",
-  "action.rotp_pj.pj_poison_unject.param": "Вивезти яд з %s"
+  "action.rotp_pj.pj_poison_unject.param": "Вивезти яд з %s",
+  "action.rotp_pj.pj_hand_toggle": "Вибрати руку | Я думаю, що ви отримали помилку",
+  "action.rotp_pj.pj_hand_toggle.true": "Вибрати руку | ОСНОВНА",
+  "action.rotp_pj.pj_hand_toggle.false": "Вибрати руку | ДРУГА"
 }

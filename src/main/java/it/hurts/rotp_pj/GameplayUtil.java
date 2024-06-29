@@ -6,12 +6,14 @@ import it.hurts.rotp_pj.init.InitStands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -19,9 +21,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
@@ -30,35 +35,50 @@ import org.jetbrains.annotations.NotNull;
 @Mod.EventBusSubscriber(modid = RotpPJAddon.MOD_ID)
 public class GameplayUtil {
     private static int Duration = 500;
+    private static final Map<PlayerEntity, Boolean> passiveUsers = new HashMap<>();
+    public static Map<PlayerEntity, Boolean> getPassiveUsers() {
+        return passiveUsers;
+    }
+    private static final Map<PlayerEntity, Boolean> eatUsers = new HashMap<>();
+    private static final Map<PlayerEntity, Hand> handUsers = new HashMap<>();
+    public static Map<PlayerEntity, Hand> getHandOfUser() {
+        return handUsers;
+    }
+
 //    @SubscribeEvent
 //    public static void onCraftEvent(PlayerEvent.ItemCraftedEvent event) {
-//        LivingEntity entity = event.getEntityLiving();
-//        ItemStack item = event.getCrafting();
-//        Vector3d pos = entity.position();
-//        ItemStack itemStack = item.copy();
-//        entity.level.addParticle(ModParticles.HAMON_AURA_RED.get(), pos.x, pos.y + 1.8, pos.z, 0, 0, 0);
-//        if (item.isEdible()) {
-//            itemStack.getOrCreateTag().putBoolean("injected", true);
-//            itemStack.getOrCreateTag().putBoolean("crafted", true);
-//            entity.setItemInHand(Hand.MAIN_HAND, itemStack);
+//        PlayerEntity player = event.getPlayer();
+//        if (passiveUsers.getOrDefault(player, false)) {
+//            ItemStack itemStack = event.getCrafting();
+//            if (itemStack.isEdible()) {
+//                itemStack.getOrCreateTag().putBoolean("injected", true);
+//                itemStack.getOrCreateTag().putBoolean("crafted", true);
+//            }
 //        }
-//    } // TODO: Fix this shit.
+//    } // TODO: Rewrite/Fix
 
     @SubscribeEvent
-    public static void onLivingEntityUpdate(LivingEvent.LivingUpdateEvent event ) {
+    public static void onLivingEntityUpdate(LivingEvent.LivingUpdateEvent event) {
         Entity entity = event.getEntity();
         if (entity instanceof ItemEntity) {
             ItemStack item = ((ItemEntity) entity).getItem();
-            CompoundNBT tags = item.getTag();
             if (item.hasTag()) {
-                if (tags.getBoolean("injected")) {
-                    entity.level.addParticle(ModParticles.HAMON_SPARK_YELLOW.get(), entity.position().x, entity.position().y + 0.5, entity.position().z, 0, 0, 0);
-                } else if (tags.getBoolean("poisoned")) {
-                    entity.level.addParticle(ModParticles.HAMON_SPARK_BLUE.get(), entity.position().x, entity.position().y + 0.5, entity.position().z, 0, 0, 0);
+                CompoundNBT tags = item.getTag();
+                if (tags != null) {
+                    if (tags.getBoolean("injected")) {
+                        entity.level.addParticle(ModParticles.HAMON_SPARK_YELLOW.get(),
+                                entity.getX(), entity.getY() + 0.5, entity.getZ(),
+                                0, 0, 0);
+                    } else if (tags.getBoolean("poisoned")) {
+                        entity.level.addParticle(ModParticles.HAMON_SPARK_BLUE.get(),
+                                entity.getX(), entity.getY() + 0.5, entity.getZ(),
+                                0, 0, 0);
+                    }
                 }
             }
         }
     }
+
 
     @SubscribeEvent
     public static void onEatingEvent(LivingEntityUseItemEvent.Tick event) {
@@ -85,6 +105,12 @@ public class GameplayUtil {
         logger.info("[Pearl Jam] randomBoolean: " + randomBoolean);
         if (item.isEdible() && item.hasTag()) {
             CompoundNBT tags = item.getTag();
+            if (eatUsers.get(entity) == null) {
+                eatUsers.put((PlayerEntity) entity, true);
+            } else {
+                eatUsers.remove(entity);
+                return;
+            }
             if (tags.getBoolean("injected")) {
                 AddBuffs(entity, randomBoolean);
             } else if (tags.getBoolean("poisoned")) {
@@ -94,12 +120,12 @@ public class GameplayUtil {
     }
 
     private static void AddBuffs(LivingEntity entity, boolean power) {
-        Random random = new Random();
-        int randomInt = random.nextInt(11);
-        int amplifier = 0;
-        if (power) amplifier += 3;
+        int amplifier = power ? 3 : 0;
+        int randomInt = new Random().nextInt(9);
         Logger logger = RotpPJAddon.getLogger();
+
         logger.info("[Pearl Jam] randomInt: " + randomInt);
+
         entity.addEffect(new EffectInstance(Effects.SATURATION, Duration/3, 3+amplifier, false, false, true));
         switch (randomInt) {
             case 0:
@@ -178,14 +204,19 @@ public class GameplayUtil {
 
     public static ItemStack GetFoodItem(@NotNull LivingEntity user) {
         ItemStack itemStack = ItemStack.EMPTY;
-        ItemStack OffHand = user.getOffhandItem();
-        Item off_item = OffHand.getItem();
-        if (off_item.isEdible() || off_item.getUseAnimation(OffHand) == UseAction.DRINK) {
-            itemStack = OffHand;
+        ItemStack Hand;
+        if (handUsers.containsKey(user)) {
+            Hand = user.getMainHandItem();
+        } else {
+            Hand = user.getOffhandItem();
         }
-        if (itemStack.getCount() != 1) {
-            itemStack = ItemStack.EMPTY;
+        Item item = Hand.getItem();
+        if (item.isEdible() || item.getUseAnimation(Hand) == UseAction.EAT) {
+            itemStack = Hand;
         }
+//        if (itemStack.getCount() != 1) {
+//            itemStack = ItemStack.EMPTY;
+//        }
         return itemStack;
     }
 }
