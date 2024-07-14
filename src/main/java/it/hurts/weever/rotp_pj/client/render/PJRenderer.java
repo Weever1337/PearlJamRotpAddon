@@ -1,10 +1,10 @@
-package it.hurts.rotp_pj.client.render;
+package it.hurts.weever.rotp_pj.client.render;
 
 import com.github.standobyte.jojo.client.render.entity.model.stand.StandEntityModel;
 import com.github.standobyte.jojo.client.render.entity.model.stand.StandModelRegistry;
 import com.github.standobyte.jojo.client.render.entity.renderer.stand.StandEntityRenderer;
-import it.hurts.rotp_pj.RotpPJAddon;
-import it.hurts.rotp_pj.entity.PJEntity;
+import it.hurts.weever.rotp_pj.RotpPJAddon;
+import it.hurts.weever.rotp_pj.entity.PJEntity;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;

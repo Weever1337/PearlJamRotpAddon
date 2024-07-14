@@ -1,8 +1,8 @@
-package it.hurts.rotp_pj.client;
+package it.hurts.weever.rotp_pj.client;
 
-import it.hurts.rotp_pj.RotpPJAddon;
-import it.hurts.rotp_pj.client.render.PJRenderer;
-import it.hurts.rotp_pj.init.InitStands;
+import it.hurts.weever.rotp_pj.RotpPJAddon;
+import it.hurts.weever.rotp_pj.client.render.PJRenderer;
+import it.hurts.weever.rotp_pj.init.InitStands;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

@@ -1,8 +1,8 @@
-package it.hurts.rotp_pj;
+package it.hurts.weever.rotp_pj;
 
-import it.hurts.rotp_pj.init.InitEntities;
-import it.hurts.rotp_pj.init.InitStands;
-import it.hurts.rotp_pj.init.InitSounds;
+import it.hurts.weever.rotp_pj.init.InitEntities;
+import it.hurts.weever.rotp_pj.init.InitStands;
+import it.hurts.weever.rotp_pj.init.InitSounds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -9,9 +9,16 @@
 
   "action.rotp_pj.pj_poison_inject": "Ввести яд в пищу",
   "action.rotp_pj.pj_poison_inject.param": "Ввести яд в %s",
-  "action.rotp_pj.pj_poison_unject": "Вывести яд из пищи",
-  "action.rotp_pj.pj_poison_unject.param": "Вывести яд из %s",
+
+  "action.rotp_pj.pj_craft_passive": "Пассивное ремесло | Я думаю, что вы получили ошибку",
+  "action.rotp_pj.pj_craft_passive.true": "Пассивное ремесло | ВКЛ",
+  "action.rotp_pj.pj_craft_passive.false": "Пассивное ремесло | ВЫКЛ",
+
   "action.rotp_pj.pj_hand_toggle": "Выбрать руку | Я думаю, что вы получили ошибку",
   "action.rotp_pj.pj_hand_toggle.true": "Выбрать руку | ОСНОВНАЯ",
-  "action.rotp_pj.pj_hand_toggle.false": "Выбрать руку | ДРУГАЯ"
+  "action.rotp_pj.pj_hand_toggle.false": "Выбрать руку | ДРУГАЯ",
+
+  "action.rotp_pj.pj_secret_by_chef": "Секрет от шефа | Я думаю, что вы получили ошибку",
+  "action.rotp_pj.pj_secret_by_chef.true": "Секрет от шефа | ВКЛ",
+  "action.rotp_pj.pj_secret_by_chef.false": "Секрет от шефа | ВЫКЛ"
 }

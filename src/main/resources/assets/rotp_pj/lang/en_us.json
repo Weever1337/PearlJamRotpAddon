@@ -9,12 +9,16 @@
 
   "action.rotp_pj.pj_poison_inject": "Inject Poison into Food",
   "action.rotp_pj.pj_poison_inject.param": "Inject Poison into %s",
-  "action.rotp_pj.pj_poison_unject": "Unject Poison from Food",
-  "action.rotp_pj.pj_poison_unject.param": "Unject Poison from %s",
-  "action.rotp_pj.pj_craft_passive": "Craft Passive | I think You get a error",
+
+  "action.rotp_pj.pj_craft_passive": "Craft Passive | I think you get a error",
   "action.rotp_pj.pj_craft_passive.true": "Craft Passive | ON",
   "action.rotp_pj.pj_craft_passive.false": "Craft Passive | OFF",
-  "action.rotp_pj.pj_hand_toggle": "Toggle Hand | I think You get a error",
+
+  "action.rotp_pj.pj_hand_toggle": "Toggle Hand | I think you get a error",
   "action.rotp_pj.pj_hand_toggle.true": "Toggle Hand | MAIN HAND",
-  "action.rotp_pj.pj_hand_toggle.false": "Toggle Hand | OFFHAND"
+  "action.rotp_pj.pj_hand_toggle.false": "Toggle Hand | OFFHAND",
+
+  "action.rotp_pj.pj_secret_by_chef": "Secret By Chef | I think you get a error",
+  "action.rotp_pj.pj_secret_by_chef.true": "Secret By Chef | ON",
+  "action.rotp_pj.pj_secret_by_chef.false": "Secret By Chef | OFF"
 }
