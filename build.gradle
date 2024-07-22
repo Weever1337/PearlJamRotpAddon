@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${addon_version}"
+version = release.toBoolean() ? "${addon_version}" : "${addon_version}-" + new Date().format('yyMMdd') + "-a"
 group = mod_group_id
 archivesBaseName = mod_name
 

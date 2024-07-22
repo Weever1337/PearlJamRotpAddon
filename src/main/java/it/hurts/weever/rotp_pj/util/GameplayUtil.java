@@ -1,6 +1,10 @@
-package it.hurts.weever.rotp_pj;
+package it.hurts.weever.rotp_pj.util;
 
 import com.github.standobyte.jojo.init.ModParticles;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import it.hurts.weever.rotp_pj.RotpPJAddon;
+import it.hurts.weever.rotp_pj.init.InitParticles;
+import it.hurts.weever.rotp_pj.power.impl.stand.type.CookingStandType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -11,16 +15,16 @@ import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 @Mod.EventBusSubscriber(modid = RotpPJAddon.MOD_ID)
@@ -31,13 +35,17 @@ public class GameplayUtil {
         return passiveUsers;
     }
     private static final Map<PlayerEntity, Boolean> eatUsers = new HashMap<>();
-    private static final Set<PlayerEntity> handUsers = new HashSet<>();
-    public static Set<PlayerEntity> getMainHandOrNot() {
-        return handUsers;
+    public enum BuffValues {
+        MINING,
+        COMBAT,
+        FARMING,
+        RUNNING
     }
-    private static final Set<PlayerEntity> secretFood = new HashSet<>();
-    public static Set<PlayerEntity> getSecretFoodOrNot() {
-        return secretFood;
+    public enum DeBuffsValues {
+        MINING,
+        COMBAT,
+        FARMING,
+        RUNNING
     }
 
 //    @SubscribeEvent
@@ -108,6 +116,36 @@ public class GameplayUtil {
             } else if (tags.getBoolean("poisoned")) {
                 addDeBuffs(entity, randomBoolean);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onWorldTickEvent(TickEvent.PlayerTickEvent event) {
+        World level = event.player.level;
+        if (event.player.tickCount % 6 == 0) {
+            level.getEntitiesOfClass(Entity.class, event.player.getBoundingBox().inflate(101), null).forEach(
+                entity -> {
+                    if (entity instanceof ItemEntity) {
+                        ItemEntity itemEntity = (ItemEntity) entity;
+                        ItemStack item = itemEntity.getItem();
+                        if (item.hasTag()) {
+                            CompoundNBT tags = item.getTag();
+                            if (tags.contains("injected")) {
+                                System.out.println("INJECTED");
+                                level.addParticle(InitParticles.SPARK_ORANGE.get(),
+                                        itemEntity.getX(), itemEntity.getY() + 0.5, itemEntity.getZ(),
+                                        0, 0, 0);
+                            } else if (tags.contains("poisoned")) {
+                                if (tags.contains("author")) {
+                                    System.out.println("POISONED");
+                                    level.addParticle(InitParticles.SPARK_YELLOW.get(),
+                                            itemEntity.getX(), itemEntity.getY() + 0.5, itemEntity.getZ(),
+                                            0, 0, 0);
+                                }
+                            }
+                        }
+                    }
+                });
         }
     }
 
@@ -191,7 +229,13 @@ public class GameplayUtil {
     public static ItemStack getFoodItem(@NotNull LivingEntity user) {
         ItemStack foodItemStack = ItemStack.EMPTY;
         ItemStack handItem;
-        if (handUsers.contains(user)) {
+        AtomicBoolean hand = new AtomicBoolean(false);
+        IStandPower.getStandPowerOptional(user).ifPresent(power -> {
+            if (power.getType() instanceof CookingStandType) {
+                hand.set(((CookingStandType<?>) power.getType()).getMainHandToggle(power));
+            }
+        });
+        if (hand.get()) {
             handItem = user.getMainHandItem();
         } else {
             handItem = user.getOffhandItem();

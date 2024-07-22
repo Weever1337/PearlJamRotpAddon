@@ -1,6 +1,7 @@
-package it.hurts.weever.rotp_pj;
+package it.hurts.weever.rotp_pj.util;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import it.hurts.weever.rotp_pj.RotpPJAddon;
 import it.hurts.weever.rotp_pj.init.InitStands;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;

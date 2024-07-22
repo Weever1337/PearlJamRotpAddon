@@ -4,7 +4,8 @@ import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import it.hurts.weever.rotp_pj.GameplayUtil;
+import it.hurts.weever.rotp_pj.power.impl.stand.type.CookingStandType;
+import it.hurts.weever.rotp_pj.util.GameplayUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -44,12 +45,13 @@ public class InjectPoisonFood extends StandAction {
                 int count = itemStack.getCount();
                 int stamina = 200;
                 for (int i = 0; i < count; i++) {
-                    stamina += 10;
+                    stamina += 100;
                 }
-                boolean hand = GameplayUtil.getMainHandOrNot().contains((PlayerEntity) user);
+                boolean hand = user instanceof PlayerEntity ? ((CookingStandType<?>) power.getType()).getMainHandToggle(power) : false;
                 ItemStack stack = itemStack.copy();
+                boolean passive = user instanceof PlayerEntity ? ((CookingStandType<?>) power.getType()).getSecretFoodToggle(power) : false;
                 stack.getOrCreateTag().putBoolean("poisoned", true);
-                if (!GameplayUtil.getSecretFoodOrNot().contains(user)) {
+                if (passive) {
                     stack.getOrCreateTag().putString("author", user.getDisplayName().getString());
                 }
                 user.setItemInHand(hand ? Hand.MAIN_HAND : Hand.OFF_HAND, stack);
@@ -68,4 +70,5 @@ public class InjectPoisonFood extends StandAction {
             return super.getTranslatedName(power, key);
         }
     }
+    
 }

@@ -5,7 +5,8 @@ import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.general.LazySupplier;
 import com.github.standobyte.jojo.util.mc.MCUtil;
-import it.hurts.weever.rotp_pj.GameplayUtil;
+import it.hurts.weever.rotp_pj.capability.PlayerUtilCapProvider;
+import it.hurts.weever.rotp_pj.power.impl.stand.type.CookingStandType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
@@ -25,19 +26,17 @@ public class HandToggle extends StandAction {
     @Override
     public void onPerform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide()) {
-            boolean hand = GameplayUtil.getMainHandOrNot().contains((PlayerEntity) user);
-            if (hand) {
-                GameplayUtil.getMainHandOrNot().remove((PlayerEntity) user);
-            } else {
-                GameplayUtil.getMainHandOrNot().add((PlayerEntity) user);
-            }
+            user.getCapability(PlayerUtilCapProvider.CAPABILITY).ifPresent(entityPJUserCapability -> {
+                System.out.println(entityPJUserCapability.getMainHandToggle());
+                entityPJUserCapability.setMainHandToggle(!entityPJUserCapability.getMainHandToggle());
+                System.out.println(entityPJUserCapability.getMainHandToggle());
+            });
         }
     }
 
     @Override
     public IFormattableTextComponent getTranslatedName(IStandPower power, String key) {
-        LivingEntity user = power.getUser();
-        boolean hand = GameplayUtil.getMainHandOrNot().contains((PlayerEntity) user);
+        boolean hand = ((CookingStandType<?>) power.getType()).getMainHandToggle(power);
         return new TranslationTextComponent(key + (hand ? ".true" : ".false"));
     }
 
@@ -49,7 +48,8 @@ public class HandToggle extends StandAction {
     @Override
     public ResourceLocation getIconTexture(@Nullable IStandPower power) {
         if (power != null) {
-            boolean hand = GameplayUtil.getMainHandOrNot().contains((PlayerEntity) power.getUser());
+            LivingEntity user = power.getUser();
+            boolean hand = user instanceof PlayerEntity ? ((CookingStandType<?>) power.getType()).getMainHandToggle(power) : false;
             HandSide handSide = MCUtil.getHandSide(power.getUser(), Hand.MAIN_HAND);
 
             if (hand) { // what a hell 💀
@@ -62,7 +62,7 @@ public class HandToggle extends StandAction {
                 if (handSide == HandSide.LEFT) {
                     return rightTex.get();
                 } else {
-                return leftTex.get();
+                    return leftTex.get();
                 }
             }
         } else {

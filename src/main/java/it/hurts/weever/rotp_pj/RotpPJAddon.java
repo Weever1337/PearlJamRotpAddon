@@ -1,8 +1,10 @@
 package it.hurts.weever.rotp_pj;
 
 import it.hurts.weever.rotp_pj.init.InitEntities;
+import it.hurts.weever.rotp_pj.init.InitParticles;
 import it.hurts.weever.rotp_pj.init.InitStands;
 import it.hurts.weever.rotp_pj.init.InitSounds;
+import it.hurts.weever.rotp_pj.network.PacketManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +23,8 @@ public class RotpPJAddon {
         InitSounds.SOUNDS.register(modEventBus);
         InitStands.ACTIONS.register(modEventBus);
         InitStands.STANDS.register(modEventBus);
+        InitParticles.PARTICLES.register(modEventBus);
+        PacketManager.init();
     }
 
     public static Logger getLogger() {

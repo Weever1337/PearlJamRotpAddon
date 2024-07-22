@@ -13,6 +13,7 @@ import it.hurts.weever.rotp_pj.RotpPJAddon;
 import it.hurts.weever.rotp_pj.action.stand.*;
 import it.hurts.weever.rotp_pj.entity.PJEntity;
 
+import it.hurts.weever.rotp_pj.power.impl.stand.type.CookingStandType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -65,10 +66,10 @@ public class InitStands {
                     .holdToFire(5, false)
             ));
 
-    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<PJEntity>> STAND_PJ =
+    public static final EntityStandRegistryObject<CookingStandType<StandStats>, StandEntityType<PJEntity>> STAND_PJ =
             new EntityStandRegistryObject<>("pearl_jam",
                     STANDS, 
-                    () -> new EntityStandType.Builder<>()
+                    () -> new CookingStandType.Builder<>()
                     .color(0xe7b863)
                     .storyPartName(StoryPart.DIAMOND_IS_UNBREAKABLE.getName())
                     .leftClickHotbar(
