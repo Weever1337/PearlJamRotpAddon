@@ -4,12 +4,12 @@ import com.github.standobyte.jojo.client.render.entity.model.stand.StandEntityMo
 import com.github.standobyte.jojo.client.render.entity.model.stand.StandModelRegistry;
 import com.github.standobyte.jojo.client.render.entity.renderer.stand.StandEntityRenderer;
 import it.hurts.weever.rotp_pj.RotpPJAddon;
-import it.hurts.weever.rotp_pj.entity.PJEntity;
 
+import it.hurts.weever.rotp_pj.entity.PJStandEntity;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
-public class PJRenderer extends StandEntityRenderer<PJEntity, StandEntityModel<PJEntity>> {
+public class PJRenderer extends StandEntityRenderer<PJStandEntity, StandEntityModel<PJStandEntity>> {
     
     public PJRenderer(EntityRendererManager renderManager) {
         super(renderManager, 

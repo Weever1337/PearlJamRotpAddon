@@ -19,8 +19,7 @@ public class ClientInit {
     
     @SubscribeEvent
     public static void onFMLClientSetup(FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(
-                InitStands.STAND_PJ.getEntityType(), PJRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitStands.STAND_PJ.getEntityType(), PJRenderer::new);
         event.enqueueWork(() -> {
             Minecraft mc = event.getMinecraftSupplier().get();
 

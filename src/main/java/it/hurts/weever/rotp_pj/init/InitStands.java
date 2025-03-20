@@ -4,15 +4,13 @@ import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.init.power.stand.EntityStandRegistryObject;
-import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
 import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
-import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.github.standobyte.jojo.util.mod.StoryPart;
 import it.hurts.weever.rotp_pj.RotpPJAddon;
 import it.hurts.weever.rotp_pj.action.stand.*;
-import it.hurts.weever.rotp_pj.entity.PJEntity;
 
+import it.hurts.weever.rotp_pj.entity.PJStandEntity;
 import it.hurts.weever.rotp_pj.power.impl.stand.type.CookingStandType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -66,7 +64,7 @@ public class InitStands {
                     .holdToFire(5, false)
             ));
 
-    public static final EntityStandRegistryObject<CookingStandType<StandStats>, StandEntityType<PJEntity>> STAND_PJ =
+    public static final EntityStandRegistryObject<CookingStandType<StandStats>, StandEntityType<PJStandEntity>> STAND_PJ =
             new EntityStandRegistryObject<>("pearl_jam",
                     STANDS, 
                     () -> new CookingStandType.Builder<>()
@@ -93,7 +91,7 @@ public class InitStands {
                     .disableManualControl().disableStandLeap()
                     .build(),
                     InitEntities.ENTITIES,
-                    () -> new StandEntityType<>(PJEntity::new, 0.65F, 1.8F)
+                    () -> new StandEntityType<>(PJStandEntity::new, 0.65F, 1.8F)
                             .summonSound(InitSounds.PJ_SUMMON)
                             .unsummonSound(InitSounds.PJ_UNSUMMON))
             .withDefaultStandAttributes();
